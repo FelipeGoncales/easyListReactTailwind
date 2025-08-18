@@ -1,41 +1,50 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import { v4 } from "uuid";
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
+const url = "https://easylistapi.onrender.com";
 
 function App() {
 
   // Chama o navigate fora da função
   const navigate = useNavigate()
 
-  const [tasks, setTasks] = useState([
-    {
-      id: 12,
-      title: "Ir para a escola",
-      desc: "Acordar as 6h da manhã para ir para a escola de bicicleta",
-      isCompleted: false
-    },
-    {
-      id: 233232,
-      title: "Estudar programação",
-      desc: "Estudar para melhorar minhas habilidades com React",
-      isCompleted: false
-    }
-  ])
+  const [tasks, setTasks] = useState([])
+
+  useEffect(() => {
+    fetch(`${url}/task`)
+      .then((res) => res.json())
+      .then((data) =>
+        setTasks(data.tasks)
+      )
+      .catch((err) => console.log(err))
+  }, [])
 
   // Função para adicionar nova tarefa
   function onAddTaskClick(title, desc) {
 
-    // Cria o novo objeto task
-    const newTask = {
-      id: v4(),
-      title: title,
-      desc: desc,
-      isCompleted: false
-    }
+    let newTask = {};
 
-    return setTasks([...tasks, newTask])
+    return fetch(`${url}/task`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        titulo: title,
+        descricao: desc,
+        isCompleted: false
+      })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        newTask = data.newTask;
+
+        setTasks([...tasks, newTask])
+      })
+      .catch((err) => console.log(err))
   }
 
   // Função para deletar uma task
@@ -43,7 +52,22 @@ function App() {
 
     const newTasks = tasks.filter((task) => task.id != taskId)
 
-    setTasks(newTasks);
+    return fetch(`${url}/task`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id_task: taskId
+      })
+    })
+      .then((res) => res.JSON)
+      .then((data) => {
+        
+        setTasks(newTasks);
+
+      })
+      .catch((err) => console.log(err))
 
   }
 
@@ -54,7 +78,19 @@ function App() {
       task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
     )
 
-    setTasks(newTasks);
+    fetch(`${url}/task`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id_task: taskId,
+        isCompleted: false
+      })
+    })
+      .catch((err) => console.log(err))
+      
+      setTasks(newTasks);
 
   }
 
@@ -63,7 +99,7 @@ function App() {
 
     // Cria a query
     const query = new URLSearchParams()
-    
+
     // Adiciona os objetos a query
     query.set('title', title);
     query.set('desc', desc);
@@ -82,7 +118,7 @@ function App() {
           <h1 className='text-slate-700 text-3xl font-bold'>EasyList</h1>
         </div>
 
-        <AddTask onAddTaskClick={onAddTaskClick}/>
+        <AddTask onAddTaskClick={onAddTaskClick} />
 
         <Tasks tasks={tasks} onDeleteTaskClick={onDeleteTaskClick} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
 

@@ -10,7 +10,7 @@ function Tasks(props) {
                             className={`bg-slate-300 rounded-md p-3 text-slate-900 w-full text-left cursor-pointer h-full ${task.isCompleted ? 'line-through' : ""}`}
                             onClick={() => props.onTaskClick(task.id)}
                         >
-                            {task.title}
+                            {task.titulo}
                         </button>
 
                         <button 
@@ -22,7 +22,7 @@ function Tasks(props) {
 
                         <button 
                             className="text-xl bg-slate-300 p-5 rounded-md text-slate-900 cursor-pointer h-full flex items-center justify-center"
-                            onClick={() => props.onSeeDetailsClick(task.title, task.desc)}
+                            onClick={() => props.onSeeDetailsClick(task.titulo, task.descricao)}
                         >
                             <i className="fa-solid fa-chevron-right"></i>
                         </button>
