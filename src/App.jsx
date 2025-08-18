@@ -78,6 +78,8 @@ function App() {
       task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
     )
 
+    const updatedTask = newTasks.find((task) => task.id === taskId);
+
     fetch(`${url}/task`, {
       method: "PUT",
       headers: {
@@ -85,7 +87,7 @@ function App() {
       },
       body: JSON.stringify({
         id_task: taskId,
-        isCompleted: false
+        isCompleted: updatedTask.isCompleted
       })
     })
       .catch((err) => console.log(err))
