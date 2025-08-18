@@ -12,13 +12,19 @@ function TaskInfo() {
   // Loading
   const [loading, setLoading] = useState(true);
 
+  // confirmDelete
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  // Editar
+  const [editOn, setEditOn] = useState(false);
+
   // Obtém os parâmetros da URL
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
 
-  let [title, setTitle] = useState("");
-  let [desc, setDesc] = useState("");
-  let [isCompleted, setIsCompleted] = useState(false);
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [isCompleted, setIsCompleted] = useState(false);
 
   // Caso os parâmetros estejam vazios, retorna para a página principal
   useEffect(() => {
@@ -76,8 +82,17 @@ function TaskInfo() {
     }).catch((err) => console.log(err));
   }
 
+  // Função para abrir o modal
+  function onDeleteTaskClick() {
+    setConfirmDelete(true);
+  }
+
   // Função para deletar uma task
-  function onDeleteTaskClick(taskId) {
+  function deleteTask(taskId) {
+
+    // Atualizando no front
+    setConfirmDelete(false);
+    setLoading(true);
 
     return fetch(`${url}/task`, {
       method: "DELETE",
@@ -98,6 +113,24 @@ function TaskInfo() {
       .catch((err) => console.log(err));
   }
 
+  // Função para salvar as alterações
+  function onSaveChangesClick() {
+    setEditOn(false);
+
+    return fetch(`${url}/task`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id_task: id,
+        titulo: title,
+        descricao: desc
+      })
+    })
+      .catch((err) => console.log(err))
+  }
+
   return (
     <div className="h-screen w-screen bg-gray-200 flex justify-center items-center">
       {loading ? (
@@ -105,6 +138,29 @@ function TaskInfo() {
           <ClipLoader size={30} margin={3} speedMultiplier={1.1} />
         </div>
       ) : null}
+
+      {
+        confirmDelete ? (
+          <div className='absolute left-0 top-0 w-screen h-screen flex justify-center items-center bg-[rgba(0,0,0,0.6)]'>
+            <div className='sm:w-[250px] w-[90%] flex flex-col justify-center items-center bg-gray-200 sm:p-6 p-4 rounded-2xl gap-3'>
+              <p className='text-slate-700 sm:text-2xl text-xl font-bold duration-500'>Deletar tarefa?</p>
+              <button
+                className='bg-green-400 w-full p-[6px] rounded-md text-green-900 font-semibold cursor-pointer text-[15px] shadow-[0_0_20px_rgba(0,0,0,0.2)]'
+                onClick={() => deleteTask(id)}
+              >
+                Confirmar
+              </button>
+
+              <button
+                className='bg-red-400 w-full p-[6px] rounded-md text-red-900 font-semibold cursor-pointer text-[15px] shadow-[0_0_20px_rgba(0,0,0,0.2)]'
+                onClick={() => setConfirmDelete(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        ) : null
+      }
 
       <div className="flex flex-col gap-6 justify-center items-center sm:w-[480px] w-[90%]">
         <div className="flex w-full items-center justify-center relative">
@@ -119,18 +175,34 @@ function TaskInfo() {
         </div>
 
         <div className="w-full bg-slate-400 sm:p-6 p-4 rounded-md flex flex-col gap-4 justify-center align-top shadow-[0_0_12px_rgba(0,0,0,0.15)]">
-          <div className="w-full flex justify-between items-center">
-            <p className="sm:text-[18px] text-[17px] text-slate-700 font-semibold ">
-              {title}
-            </p>
+          <div className="w-full flex justify-between items-center gap-2">
+
+            {
+              !editOn ? (
+                <p className="sm:text-[18px] text-[17px] text-slate-700 font-semibold truncate">
+                  {title}
+                </p>
+              ) : (
+                <div className="w-[70%] relative">
+                  <i className="fa-solid fa-pencil absolute left-0 top-1/2 transform -translate-y-1/2 text-slate-600 text-sm"></i>
+                  <input
+                    type="text"
+                    className="sm:text-[18px] text-[17px] pl-[22px] text-slate-700 font-semibold outline-0 w-full"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+              )
+            }
+
             {parseInt(isCompleted) === 1 ? (
               <button
                 className="flex gap-1 items-center justify-center bg-teal-400 p-[3px_7px] rounded-sm cursor-pointer"
                 onClick={() => onIsCompletedClick(id)}
               >
-                <i className="fa-solid fa-circle-check text-slate-900 flex items-center sm:text-[15px] text-[13px]"></i>
-                <p className="text-slate-900 sm:text-[15px] text-[13px]">
-                  Feita
+                <i className="fa-solid fa-circle-check text-slate-900 flex items-center sm:text-[14px] text-[11px]"></i>
+                <p className="text-slate-900 sm:text-[14px] text-[11px]">
+                  Concluída
                 </p>
               </button>
             ) : (
@@ -138,24 +210,55 @@ function TaskInfo() {
                 className="flex gap-1 items-center justify-center bg-amber-500 p-[3px_7px] rounded-sm cursor-pointer"
                 onClick={() => onIsCompletedClick(id)}
               >
-                <i className="fa-solid fa-hourglass text-slate-900 flex items-center sm:text-[15px] text-[13px]"></i>
-                <p className="text-slate-900 sm:text-[15px] text-[13px]">
+                <i className="fa-solid fa-hourglass text-slate-900 flex items-center sm:text-[14px] text-[11px]"></i>
+                <p className="text-slate-900 sm:text-[14px] text-[11px]">
                   Pendente
                 </p>
               </button>
             )}
           </div>
-          <p className="p-3 rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px]">
-            {desc}
-          </p>
+
+          {
+            !editOn ? (
+              <p className="p-3 rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] overflow-hidden">
+                {desc}
+              </p>
+            ) : (
+              <div className="w-full relative overflow-hidden">
+                <i className="fa-solid fa-pencil absolute left-[10px] top-1/2 transform -translate-y-1/2 text-slate-600 text-sm overflow-hidden"></i>
+                <textarea
+                  type="text"
+                  className="p-3 pl-[33px] rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] outline-0 w-full h-20"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                ></textarea>
+              </div>
+            )
+          }
+
 
           <div className="flex w-full gap-2">
-            <button className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center">
-              <i className="fa-solid fa-pen-to-square"></i>
-              Editar
-            </button>
+            {
+              editOn ? (
+                <button
+                  className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center"
+                  onClick={onSaveChangesClick}
+                >
+                  <i className="fa-solid fa-floppy-disk"></i>
+                  Salvar
+                </button>
+              ) : (
+                <button
+                  className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center"
+                  onClick={() => setEditOn(true)}
+                >
+                  <i className="fa-solid fa-pen-to-square"></i>
+                  Editar
+                </button>
+              )
+            }
 
-            <button className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center" onClick={() =>onDeleteTaskClick(id)}>
+            <button className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center" onClick={() => onDeleteTaskClick()}>
               <i className="fa-regular fa-trash-can"></i>
               Excluir
             </button>

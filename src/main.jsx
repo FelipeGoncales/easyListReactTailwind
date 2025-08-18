@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import TaskInfo from './pages/TaskInfo.jsx'
+import Login from './pages/Login.jsx'
+import Cadastro from './pages/Cadastro.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
   {
     path: '/task',
     element: <TaskInfo />
+  },
+  {
+    path: '/login',
+    element: <Login />
+  },
+  {
+    path: '/cadastro',
+    element: <Cadastro />
   }
 ])
 
