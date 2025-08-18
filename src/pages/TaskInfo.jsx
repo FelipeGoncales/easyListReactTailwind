@@ -66,7 +66,7 @@ function TaskInfo() {
                 </div>
             ) : null}
 
-            <div className='flex flex-col gap-6 justify-center items-center w-[480px]'>
+            <div className='flex flex-col gap-6 justify-center items-center sm:w-[480px] w-[90%]'>
                 <div className="flex w-full items-center justify-center relative">
                     {/* Botão para voltar para home */}
                     <i 
@@ -74,24 +74,24 @@ function TaskInfo() {
                         onClick={() => navigate('/')}
                     >
                     </i>
-                    <h1 className="text-slate-700 text-3xl font-bold">Mais detalhes</h1>
+                    <h1 className="text-slate-700 sm:text-3xl text-2xl font-bold">Mais detalhes</h1>
                 </div>
 
-                <div className="w-full bg-slate-400 p-5 rounded-md flex flex-col gap-3 justify-center align-top shadow-[0_0_12px_rgba(0,0,0,0.15)]">
+                <div className="w-full bg-slate-400 sm:p-6 p-4 rounded-md flex flex-col gap-3 justify-center align-top shadow-[0_0_12px_rgba(0,0,0,0.15)]">
                     <div className="w-full flex justify-between items-center">
-                        <p className="text-[18px] text-slate-700 font-semibold">{title}</p>
+                        <p className="sm:text-[18px] text-[17px] text-slate-700 font-semibold ">{title}</p>
                         {parseInt(isCompleted) === 1? 
                             (<div className="flex gap-1 items-center justify-center bg-teal-400 p-[3px_7px] rounded-sm">
-                                <i className="fa-solid fa-circle-check text-slate-900 flex items-center"></i>
-                                <p className="text-slate-900">Feita</p>
+                                <i className="fa-solid fa-circle-check text-slate-900 flex items-center sm:text-[15px] text-[13px]"></i>
+                                <p className="text-slate-900 sm:text-[15px] text-[13px]">Feita</p>
                             </div>) 
                             : 
                             (<div className="flex gap-1 items-center justify-center bg-amber-500 p-[3px_7px] rounded-sm">
-                                <i className="fa-solid fa-hourglass text-slate-900 flex items-center"></i>
-                                <p className="text-slate-900">Pendente</p>
+                                <i className="fa-solid fa-hourglass text-slate-900 flex items-center sm:text-[15px] text-[13px]"></i>
+                                <p className="text-slate-900 sm:text-[15px] text-[13px]">Pendente</p>
                             </div>)}
                     </div>
-                    <p className="p-3 rounded-sm bg-slate-300 text-slate-900">{desc}</p>
+                    <p className="p-3 rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px]">{desc}</p>
                 </div>
             </div>
         </div>

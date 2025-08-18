@@ -116,7 +116,7 @@ function App() {
   }
 
   return (
-    <div className='h-screen w-screen bg-gray-200 flex justify-center items-center'>
+    <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center p-[80px_0]'>
 
       {loading ? (
         <div className='flex items-center justify-center absolute top-0 left-0 bg-gray-200 w-full h-full'>
@@ -124,11 +124,11 @@ function App() {
         </div>
       ) : null}
 
-      <div className='flex flex-col gap-6 justify-center items-center w-[480px]'>
+      <div className='flex flex-col gap-6 justify-center items-center sm:w-[480px] w-[90%]'>
 
         <div className='flex gap-2 items-center justify-center'>
-          <i className="fa-solid fa-paperclip text-slate-700 text-3xl"></i>
-          <h1 className='text-slate-700 text-3xl font-bold'>EasyList</h1>
+          <i className="fa-solid fa-paperclip text-slate-700 sm:text-3xl text-2xl"></i>
+          <h1 className='text-slate-700 sm:text-3xl text-2xl font-bold'>EasyList</h1>
         </div>
 
         <AddTask onAddTaskClick={onAddTaskClick} />
