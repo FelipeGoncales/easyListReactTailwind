@@ -15,6 +15,9 @@ function App() {
   // Loading
   const [loading, setLoading] = useState(true);
 
+  // confirmDelete
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   // Tasks
   const [tasks, setTasks] = useState([])
 
