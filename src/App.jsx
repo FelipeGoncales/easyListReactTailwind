@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
-import { v4 } from "uuid";
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const url = "https://easylistapi.onrender.com";
 
@@ -61,11 +60,12 @@ function App() {
         id_task: taskId
       })
     })
-      .then((res) => res.JSON)
-      .then((data) => {
-        
-        setTasks(newTasks);
-
+      .then((res) => {
+        if (res.ok) {
+          setTasks(newTasks);
+        } else {
+          console.log(res.status);
+        }
       })
       .catch((err) => console.log(err))
 
