@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
+// URL da API
 const url = "https://easylistapi.onrender.com";
 
 function App() {
@@ -10,14 +12,18 @@ function App() {
   // Chama o navigate fora da função
   const navigate = useNavigate()
 
+  // Loading
+  const [loading, setLoading] = useState(true);
+
+  // Tasks
   const [tasks, setTasks] = useState([])
 
   useEffect(() => {
     fetch(`${url}/task`)
       .then((res) => res.json())
-      .then((data) =>
-        setTasks(data.tasks)
-      )
+      .then((data) => {
+        return setTasks(data.tasks), setLoading(false);
+      })
       .catch((err) => console.log(err))
   }, [])
 
@@ -68,7 +74,6 @@ function App() {
         }
       })
       .catch((err) => console.log(err))
-
   }
 
   // Função togle para alterar isCompleted da task
@@ -97,14 +102,13 @@ function App() {
   }
 
   // Função para navegar para a página de ver detalhes
-  function onSeeDetailsClick(title, desc) {
+  function onSeeDetailsClick(id) {
 
     // Cria a query
     const query = new URLSearchParams()
 
     // Adiciona os objetos a query
-    query.set('title', title);
-    query.set('desc', desc);
+    query.set('id', id);
 
     // Envia o usuário para outra página
     navigate(`/task?${query.toString()}`)
@@ -113,6 +117,13 @@ function App() {
 
   return (
     <div className='h-screen w-screen bg-gray-200 flex justify-center items-center'>
+
+      {loading ? (
+        <div className='flex items-center justify-center absolute top-0 left-0 bg-gray-200 w-full h-full'>
+          <ClipLoader size={30} margin={3} speedMultiplier={1.1}/>
+        </div>
+      ) : null}
+
       <div className='flex flex-col gap-6 justify-center items-center w-[480px]'>
 
         <div className='flex gap-2 items-center justify-center'>
