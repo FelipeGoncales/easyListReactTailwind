@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import FormLogin from '../components/FormLogin'
 import Logo from '../components/Logo'
+import limparRota from "../components/limparRota";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
 
 function Login() {
-
+    // Declarando hooks
     const navigate = useNavigate();
-    
+    const [searchParams] = useSearchParams();
+    const route = useLocation();
+
     // Obtém o ano atual
     const currentYear = new Date().getFullYear();
 
@@ -22,6 +25,20 @@ function Login() {
 
     // Variável para fazendo requisição
     const [loading, setLoading] = useState(false);
+
+    // Ao carregar a página
+    useEffect(() => {
+        // params de mensagem
+        const msgType = searchParams.get("type");
+        const msgText = searchParams.get("text");
+
+        // Caso existam os componentes da mensagem, exibe a mensagem
+        if (msgType != null && msgText != null) {
+            // Limpa a rota
+            limparRota(['text', 'type'], navigate, route, searchParams);
+            return showMessage(msgText, msgType);
+        }
+    }, [navigate])
 
     useEffect(() => {
         if (msg) {

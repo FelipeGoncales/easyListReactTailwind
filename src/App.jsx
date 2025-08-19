@@ -4,8 +4,10 @@ import AddTask from './components/AddTask';
 import Logo from './components/Logo'
 import ModalConfirmDelete from './components/ModalConfirmDelete';
 import InfoUser from './components/InfoUser';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
+import limparRota from './components/limparRota';
+import createQuery from './components/createQuery';
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -15,6 +17,10 @@ function App() {
   // Chama o navigate fora da função
   const navigate = useNavigate();
   const route = useLocation();
+  const [searchParams] = useSearchParams();
+
+  // Variável para exibir mensagem
+  const [msg, setMsg] = useState(null);
 
   // Loading
   const [loading, setLoading] = useState(true);
@@ -30,57 +36,104 @@ function App() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
 
+  // Effect onChange msg
+  useEffect(() => {
+    if (msg) {
+      const timer = setTimeout(() => setMsg(null), 4000);
+      return () => clearTimeout(timer); // limpa o timer se a msg mudar antes
+    }
+  }, [msg]);
+
+  // Função para exibir mensagem de erro
+  function showMessage(text, type = "error") {
+    setMsg({ text, type });
+  }
+
   // Envia para login caso não tenha token salvo
   useEffect(() => {
     const token = getToken();
 
     if (!token) {
-      if(route.pathname !== '/login' && route.pathname !== '/cadastro') {
+      if (route.pathname !== '/login' && route.pathname !== '/cadastro') {
         // Se não tiver token e não estiver na rota de login ou cadastro, redireciona para login
         navigate('/login');
       }
     }
   }, [navigate, route])
 
-  // Busca as tasks
+  // Busca as tasks e os dados do usuário
   useEffect(() => {
+    // Obtém o token
     const token = getToken();
-
-    // Caso não tenha token, retorna
+    
+    // Retorna caso seja inválido
     if (!token) return;
 
-    fetch(`${url}/task`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
+    // Variável de controle
+    let cancelled = false;
+
+    // Função para acessar ambas as requisições
+    const fetchBoth = async () => {
+      try {
+        // roda em paralelo
+        const [resTasks, resUser] = await Promise.all([
+          fetch(`${url}/task`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${url}/cadastro`, { headers: { Authorization: `Bearer ${token}` } })
+        ]);
+
+        // se qualquer requisição falhar, limpa token e evita continuar
+        if (!resTasks.ok || !resUser.ok) {
+          onSairClick("error", "Usuário não encontrado");
+          if (!cancelled) {
+            setTasks([]);
+            setNome('');
+            setEmail('');
+            setLoading(false);
+          }
+          return;
+        }
+
+        // Obtém as informações das requisições
+        const tasksData = await resTasks.json();
+        const userData = await resUser.json();
+
+        // Caso já tenha terminado retorna
+        if (cancelled) return;
+
+        // Altera as variáveis com state
+        setTasks(Array.isArray(tasksData.tasks) ? tasksData.tasks : []);
+        setNome(userData?.usuario?.nome ?? '');
+        setEmail(userData?.usuario?.email ?? '');
+
+        // params de mensagem
+        const msgType = searchParams.get("type");
+        const msgText = searchParams.get("text");
+
+        // Caso existam os componentes da mensagem, exibe a mensagem
+        if (msgType || msgText) {
+
+          limparRota(['text', 'type'], navigate, route, searchParams);
+         
+          return showMessage(msgText, msgType)
+        }
+
+      } catch (err) {
+        console.error(err);
+
+        // opcional: mostrando fallback/limpeza
+        if (!cancelled) {
+          setTasks([]);
+          setNome('');
+          setEmail('');
+        }
+
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        return setTasks(data.tasks), setLoading(false);
-      })
-      .catch((err) => console.log(err))
-  }, [])
+    };
 
-  // Busca os dados do usuário
-  useEffect(() => {
-    const token = getToken();
-
-    // Caso não tenha token, retorna
-    if (!token) return;
-
-    fetch(`${url}/cadastro`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const usuario = data.usuario;
-        // Atualiza os estados com os dados do usuário
-        return setNome(usuario.nome), setEmail(usuario.email);
-      })
-      .catch((err) => console.log(err))
-  }, [])
+    fetchBoth();
+  }, [searchParams, route, navigate]);
 
   // Controla o scroll quando o modal estiver aberto
   useEffect(() => {
@@ -137,7 +190,7 @@ function App() {
   function deleteTask(taskId) {
     // Obtém as novas tasks
     const newTasks = tasks.filter((task) => task.id != taskId)
-    
+
     // Atualiza o front
     setTasks(newTasks);
     setConfirmDelete(false);
@@ -182,27 +235,28 @@ function App() {
   }
 
   // Limpa o token e redireciona para a página de login
-  function onSairClick() {
+  function onSairClick(type, text) {
     localStorage.removeItem('token');
-    navigate('/login');
+
+    // Redireciona o usuário para login após limpar o token
+    createQuery(navigate, '/login', {
+      'type': type,
+      'text': text
+    })
   }
 
   // Função para navegar para a página de ver detalhes
   function onSeeDetailsClick(id) {
 
-    // Cria a query
-    const query = new URLSearchParams()
-
-    // Adiciona os objetos a query
-    query.set('id', id);
-
-    // Envia o usuário para outra página
-    navigate(`/task?${query.toString()}`)
+    // Função para redirecionar para task com parâmetro id
+    createQuery(navigate, '/task', {
+      'id': id
+    })
 
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen w-full bg-gray-200 flex justify-center items-center sm:p-[80px_0] p-[20px_0_30px_0]"
     >
 
@@ -228,9 +282,23 @@ function App() {
 
         <Tasks tasks={tasks} onDeleteTaskClick={onDeleteTaskClick} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
 
-        <InfoUser nome={nome} email={email} onSairClick={onSairClick} />
+        <InfoUser nome={nome} email={email} onSairClick={() => onSairClick('success', 'Logout realizado com sucesso!')} />
 
       </div>
+
+      {
+        msg && (
+          <div className="fixed left-1/2 transform -translate-x-1/2 bottom-[30px] flex items-center justify-center w-full">
+            <div
+              className={`flex items-center justify-center p-3 rounded-md gap-3 shadow-md max-w-[350px] msg
+                      ${msg.type === "error" ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"}`}
+            >
+              <i className={`fa-solid ${msg.type === "error" ? "fa-xmark" : "fa-check"} text-[15px]`} />
+              <p className="text-[14px]/[1.1rem] font-semibold">{msg.text}</p>
+            </div>
+          </div>
+        )
+      }
     </div>
   )
 }

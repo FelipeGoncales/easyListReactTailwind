@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import ModalConfirmDelete from "../components/ModalConfirmDelete";
+import createQuery from "../components/createQuery";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -117,10 +118,18 @@ function TaskInfo() {
     })
       .then((res) => {
         if (res.ok) {
-          navigate('/')
-        } else {
-          console.log(res.status);
+            return res.json()
         }
+        return null
+      })
+      .then((data) => {
+        if (!data) return navigate('/');
+
+        // Chama a função para criar a query
+        createQuery(navigate, '/', {
+          'type': 'success',
+          'text': data.success
+        })
       })
       .catch((err) => console.log(err));
   }
