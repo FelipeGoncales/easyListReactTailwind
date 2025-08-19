@@ -29,7 +29,7 @@ function Tasks(props) {
 
     return (
         <div className="flex flex-col gap-6 w-full">
-            <div className="flex w-full justify-center items-start max-h-[235px] overflow-auto shadow-[0_0_12px_rgba(0,0,0,0.15)] rounded-2xl">
+            <div className="flex w-full justify-center items-start sm:max-h-[235px] max-h-[175px] overflow-auto shadow-[0_0_12px_rgba(0,0,0,0.15)] rounded-2xl">
                 <div className="sm:p-6 p-4 bg-slate-400 flex flex-col gap-2 w-full">
 
                     <p className="sm:text-[18px] text-[16px] text-slate-700 font-semibold">Tarefas pendentes</p>
@@ -43,7 +43,7 @@ function Tasks(props) {
                 </div>
             </div>
 
-            <div className="flex w-full justify-center items-start max-h-[235px] overflow-auto shadow-[0_0_12px_rgba(0,0,0,0.15)] rounded-2xl">
+            <div className="flex w-full justify-center items-start sm:max-h-[235px] max-h-[175px] overflow-auto shadow-[0_0_12px_rgba(0,0,0,0.15)] rounded-2xl">
                 <div className="sm:p-6 p-4 bg-slate-400 flex flex-col gap-2 w-full">
 
                     <p className="sm:text-[18px] text-[16px] text-slate-700 font-semibold">Tarefas concluídas</p>

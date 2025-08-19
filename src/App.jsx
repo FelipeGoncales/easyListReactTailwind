@@ -203,7 +203,7 @@ function App() {
 
   return (
     <div 
-      className="min-h-screen w-full bg-gray-200 flex justify-center items-center sm:p-[80px_0] p-[15px_0]"
+      className="min-h-screen w-full bg-gray-200 flex justify-center items-center sm:p-[80px_0] p-[20px_0_30px_0]"
     >
 
       {
