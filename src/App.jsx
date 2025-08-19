@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 
 // URL da API
-const url = import.meta.env.API_URL;
+const url = "https://easylistapi.onrender.com";
 
 function App() {
 
@@ -26,7 +26,7 @@ function App() {
 
   // Envia para login caso não tenha token salvo
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
 
     if (!token) {
       return navigate('/login');
@@ -35,13 +35,22 @@ function App() {
 
   // Busca as tasks
   useEffect(() => {
-    fetch(`${url}/task`)
+    fetch(`${url}/task`, {
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         return setTasks(data.tasks), setLoading(false);
       })
       .catch((err) => console.log(err))
   }, [])
+
+  // Função para obter o token
+  function getToken() {
+    return localStorage.getItem('token');
+  }
 
   // Função para adicionar nova tarefa
   function onAddTaskClick(title, desc) {
@@ -57,7 +66,8 @@ function App() {
     return fetch(`${url}/task`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify(newTask)
     })
@@ -86,7 +96,8 @@ function App() {
     return fetch(`${url}/task`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify({
         id_task: taskId
@@ -107,7 +118,8 @@ function App() {
     fetch(`${url}/task`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify({
         id_task: taskId,

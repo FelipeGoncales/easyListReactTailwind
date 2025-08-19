@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function FormLogin(props) {
+function FormCadastro(props) {
 
     const navigate = useNavigate();
 
@@ -9,7 +9,15 @@ function FormLogin(props) {
             className="flex flex-col p-6 rounded-2xl bg-slate-400 items-center justify-center gap-6 w-[90%] max-w-[350px]" 
             onSubmit={(e) => props.onFormSubmit(e)}
         >
-            <h1 className="subtitle">Faça login</h1>
+            <h1 className="subtitle">Crie sua conta</h1>
+
+            <input 
+                className="inputForm"
+                type="text" 
+                placeholder="Nome*" 
+                value={props.nome}
+                onChange={(e) => props.setNome(e.target.value)}
+            />
 
             <input 
                 className="inputForm"
@@ -36,7 +44,7 @@ function FormLogin(props) {
                 </button>
 
                 <p className="text-[15px] text-slate-700">
-                    Não possui uma conta? <span className="text-slate-900 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/cadastro')}>Cadastre-se</span>
+                    Já possui uma conta? <span className="text-slate-900 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/login')}>Entrar</span>
                 </p>
             </div>
             
@@ -44,4 +52,4 @@ function FormLogin(props) {
     )
 }
 
-export default FormLogin;
+export default FormCadastro;

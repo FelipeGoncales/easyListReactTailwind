@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 import ModalConfirmDelete from "../components/ModalConfirmDelete";
 
 // URL da API
-const url = import.meta.env.API_URL;
+const url = "https://easylistapi.onrender.com";
 
 function TaskInfo() {
   // Navigate
@@ -33,7 +33,11 @@ function TaskInfo() {
       navigate("/");
     }
 
-    fetch(`${url}/task/${id}`)
+    fetch(`${url}/task/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
+      }
+    })
       // Verifica se a resposta é bem sucedida
       .then((res) => {
         if (res.ok) {
@@ -62,6 +66,11 @@ function TaskInfo() {
       });
   }, [id, navigate]);
 
+  // Função para obter o token
+  function getToken() {
+    return localStorage.getItem('token');
+  }
+
   // Função togle para alterar isCompleted da task
   function onIsCompletedClick(taskId) {
     // Obtém o inverso do isCompleted
@@ -75,6 +84,7 @@ function TaskInfo() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify({
         id_task: taskId,
@@ -99,6 +109,7 @@ function TaskInfo() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify({
         id_task: taskId,
@@ -121,7 +132,8 @@ function TaskInfo() {
     return fetch(`${url}/task`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
       },
       body: JSON.stringify({
         id_task: id,
