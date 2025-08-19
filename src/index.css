@@ -17,7 +17,7 @@
 }
 
 .msg {
-    animation: msgAnimation 4.2s;
+    animation: msgAnimation 4.1s;
 }
 
 @keyframes msgAnimation {

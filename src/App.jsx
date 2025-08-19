@@ -12,7 +12,8 @@ const url = "https://easylistapi.onrender.com";
 function App() {
 
   // Chama o navigate fora da função
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const route = useLocation();
 
   // Loading
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,10 @@ function App() {
 
   // Tasks
   const [tasks, setTasks] = useState([])
-  const route = useLocation();
+
+  // Obtém os dados do usuário
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
 
   // Envia para login caso não tenha token salvo
   useEffect(() => {
@@ -46,7 +50,7 @@ function App() {
 
     fetch(`${url}/task`, {
       headers: {
-        "Authorization": `Bearer ${getToken()}`
+        "Authorization": `Bearer ${token}`
       }
     })
       .then((res) => res.json())
@@ -55,6 +59,39 @@ function App() {
       })
       .catch((err) => console.log(err))
   }, [])
+
+  // Busca os dados do usuário
+  useEffect(() => {
+    const token = getToken();
+
+    // Caso não tenha token, retorna
+    if (!token) return;
+
+    fetch(`${url}/cadastro`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        return setNome(data.nome), setEmail(data.email);
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  // Controla o scroll quando o modal estiver aberto
+  useEffect(() => {
+    if (confirmDelete) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // cleanup pra garantir que o scroll volta
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [confirmDelete]);
 
   // Função para obter o token
   function getToken() {
@@ -156,7 +193,7 @@ function App() {
   }
 
   return (
-    <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center p-[80px_0]'>
+    <div className="min-h-screen w-full bg-gray-200 flex justify-center items-center p-[80px_0]">
 
       {
         loading ? (
@@ -179,6 +216,11 @@ function App() {
         <AddTask onAddTaskClick={onAddTaskClick} />
 
         <Tasks tasks={tasks} onDeleteTaskClick={onDeleteTaskClick} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
+
+        <div>
+          <p className='text-slate-900'>{nome}</p>
+          <p className='text-slate-900'>{email}</p>
+        </div>
 
       </div>
     </div>

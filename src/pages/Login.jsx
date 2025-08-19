@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import FormLogin from '../components/FormLogin'
 import Logo from '../components/Logo'
@@ -18,18 +18,21 @@ function Login() {
     const [senha, setSenha] = useState("");
 
     // Variável para exibir mensagem
-    const [exibirMsg, setExibirMsg] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
+    const [msg, setMsg] = useState(null);
+
+    // Variável para fazendo requisição
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (msg) {
+            const timer = setTimeout(() => setMsg(null), 4000);
+            return () => clearTimeout(timer); // limpa o timer se a msg mudar antes
+        }
+    }, [msg]);
 
     // Função para exibir mensagem de erro
-    function onExibirMsg(msg) {
-        setExibirMsg(true);
-        setErrorMsg(msg);
-
-        setTimeout(() => {
-            setExibirMsg(false);
-            setErrorMsg('');
-        }, 4150)
+    function showMessage(text, type = "error") {
+        setMsg({ text, type });
     }
 
     // Função para envio do formulário
@@ -37,8 +40,10 @@ function Login() {
         e.preventDefault();
 
         if (!email.trim() || !senha.trim()) {
-            return onExibirMsg("Dados incompletos.");
+            return showMessage("Dados incompletos.", "error");
         }
+
+        setLoading(true);
 
         const data = {
             email: email,
@@ -54,9 +59,11 @@ function Login() {
         })
             .then((res) => res.json())
             .then((data) => {
+                setLoading(false);
+
                 if (data.error) {
                     // Exibir mensagem de erro
-                    return onExibirMsg(data.error);
+                    return showMessage(data.error, 'error');
                 }
 
                 // Salva o token e redireciona para home
@@ -70,21 +77,22 @@ function Login() {
         <div className='min-h-screen w-full bg-gray-200 flex flex-col gap-10 justify-center items-center p-[80px_0]'>
             <Logo />
         
-            <FormLogin email={email} setEmail={setEmail} senha={senha} setSenha={setSenha} onFormSubmit={onFormSubmit} />
+            <FormLogin email={email} setEmail={setEmail} senha={senha} setSenha={setSenha} onFormSubmit={onFormSubmit} loading={loading} />
 
             <p className='text-[15px] sm:w-auto w-[90%] text-slate-900 text-center'>ⓒ {currentYear} Todos os direitos reservados</p>
 
             {
-                exibirMsg ? (
+                msg && (
                     <div className="fixed left-1/2 transform -translate-x-1/2 bottom-[30px] flex items-center justify-center w-full">
                         <div 
-                            className="flex box-content items-center justify-center bg-red-400 p-3 rounded-md gap-3 msg box-border max-w-[350px] shadow-[0_0_15px_rgba(0,0,0,0.2)]"
+                        className={`flex items-center justify-center p-3 rounded-md gap-3 shadow-md max-w-[350px] msg
+                            ${msg.type === "error" ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"}`}
                         >
-                            <i className="fa-solid fa-xmark text-[15px] text-red-800"></i>
-                            <p className="text-[14px]/[1.1rem] text-red-800 font-semibold">{errorMsg}</p>
+                            <i className={`fa-solid ${msg.type === "error" ? "fa-xmark" : "fa-check"} text-[15px]`} />
+                            <p className="text-[14px]/[1.1rem] font-semibold">{msg.text}</p>
                         </div>
                     </div>
-                ) : null
+                )
             }
         </div>
     )

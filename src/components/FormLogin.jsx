@@ -30,9 +30,10 @@ function FormLogin(props) {
             <div className="w-full flex flex-col items-center justify-center gap-3">
                 <button 
                     type="submit"
-                    className="buttonConfirm"
+                    className={`buttonConfirm ${props.loading ? '!bg-slate-600' : ''}`}
+                    disabled={props.loading}
                 >
-                    Entrar
+                    {props.loading ? 'Processando...' : 'Entrar'}
                 </button>
 
                 <p className="text-[15px] text-slate-700">

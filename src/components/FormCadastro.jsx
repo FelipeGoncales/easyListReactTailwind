@@ -38,9 +38,10 @@ function FormCadastro(props) {
             <div className="w-full flex flex-col items-center justify-center gap-3">
                 <button 
                     type="submit"
-                    className="buttonConfirm"
+                    className={`buttonConfirm ${props.loading ? '!bg-slate-600' : ''}`}
+                    disabled={props.loading}
                 >
-                    Criar conta
+                    {props.loading ? 'Processando...' : 'Criar conta'}
                 </button>
 
                 <p className="text-[15px] text-slate-700">
