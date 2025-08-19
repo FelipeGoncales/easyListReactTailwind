@@ -15,14 +15,6 @@ const router = createBrowserRouter([
   {
     path: '/task',
     element: <TaskInfo />
-  },
-  {
-    path: '/login',
-    element: <Login />
-  },
-  {
-    path: '/cadastro',
-    element: <Cadastro />
   }
 ])
 
