@@ -3,7 +3,7 @@ import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import Logo from './components/Logo'
 import ModalConfirmDelete from './components/ModalConfirmDelete';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 
 // URL da API
@@ -23,18 +23,27 @@ function App() {
 
   // Tasks
   const [tasks, setTasks] = useState([])
+  const route = useLocation();
 
   // Envia para login caso não tenha token salvo
   useEffect(() => {
     const token = getToken();
 
     if (!token) {
-      return navigate('/login');
+      if(route.pathname !== '/login' && route.pathname !== '/cadastro') {
+        // Se não tiver token e não estiver na rota de login ou cadastro, redireciona para login
+        navigate('/login');
+      }
     }
-  }, [navigate])
+  }, [navigate, route])
 
   // Busca as tasks
   useEffect(() => {
+    const token = getToken();
+
+    // Caso não tenha token, retorna
+    if (!token) return;
+
     fetch(`${url}/task`, {
       headers: {
         "Authorization": `Bearer ${getToken()}`
