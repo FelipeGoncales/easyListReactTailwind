@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import ModalConfirmDelete from "../components/ModalConfirmDelete";
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = import.meta.env.API_URL;
 
 function TaskInfo() {
   // Navigate
@@ -141,24 +142,7 @@ function TaskInfo() {
 
       {
         confirmDelete ? (
-          <div className='absolute left-0 top-0 w-screen h-screen flex justify-center items-center bg-[rgba(0,0,0,0.6)]'>
-            <div className='sm:w-[250px] w-[90%] flex flex-col justify-center items-center bg-gray-200 sm:p-6 p-4 rounded-2xl gap-3'>
-              <p className='text-slate-700 sm:text-2xl text-xl font-bold duration-500'>Deletar tarefa?</p>
-              <button
-                className='bg-green-400 w-full p-[6px] rounded-md text-green-900 font-semibold cursor-pointer text-[15px] shadow-[0_0_20px_rgba(0,0,0,0.2)]'
-                onClick={() => deleteTask(id)}
-              >
-                Confirmar
-              </button>
-
-              <button
-                className='bg-red-400 w-full p-[6px] rounded-md text-red-900 font-semibold cursor-pointer text-[15px] shadow-[0_0_20px_rgba(0,0,0,0.2)]'
-                onClick={() => setConfirmDelete(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
+          <ModalConfirmDelete deleteTask={deleteTask} taskId={id} setConfirmDelete={setConfirmDelete} />
         ) : null
       }
 
@@ -169,7 +153,7 @@ function TaskInfo() {
             className="fa-solid fa-chevron-left absolute left-0 top-1/2 transform -translate-y-1/2 text-slate-900 p-[10px] text-xl cursor-pointer"
             onClick={() => navigate("/")}
           ></i>
-          <h1 className="text-slate-700 sm:text-3xl text-2xl font-bold">
+          <h1 className="title">
             Mais detalhes
           </h1>
         </div>
@@ -241,7 +225,7 @@ function TaskInfo() {
             {
               editOn ? (
                 <button
-                  className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center"
+                  className="buttonConfirm"
                   onClick={onSaveChangesClick}
                 >
                   <i className="fa-solid fa-floppy-disk"></i>
@@ -249,7 +233,7 @@ function TaskInfo() {
                 </button>
               ) : (
                 <button
-                  className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center"
+                  className="buttonConfirm"
                   onClick={() => setEditOn(true)}
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
@@ -258,7 +242,7 @@ function TaskInfo() {
               )
             }
 
-            <button className="w-full p-2 text-slate-50 bg-slate-700 font-semibold rounded-md cursor-pointer hover:bg-slate-600 sm:text-[16px] text-[13px] flex gap-1 items-center justify-center" onClick={() => onDeleteTaskClick()}>
+            <button className="buttonConfirm" onClick={() => onDeleteTaskClick()}>
               <i className="fa-regular fa-trash-can"></i>
               Excluir
             </button>

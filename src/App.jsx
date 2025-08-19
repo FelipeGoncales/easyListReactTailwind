@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
+import Logo from './components/Logo'
+import ModalConfirmDelete from './components/ModalConfirmDelete';
 import { useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = import.meta.env.API_URL;
 
 function App() {
 
@@ -22,6 +24,16 @@ function App() {
   // Tasks
   const [tasks, setTasks] = useState([])
 
+  // Envia para login caso não tenha token salvo
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      return navigate('/login');
+    }
+  }, [navigate])
+
+  // Busca as tasks
   useEffect(() => {
     fetch(`${url}/task`)
       .then((res) => res.json())
@@ -135,33 +147,13 @@ function App() {
 
       {
         confirmDelete ? (
-          <div className='absolute left-0 top-0 w-screen h-screen flex justify-center items-center bg-[rgba(0,0,0,0.6)]'>
-            <div className='sm:w-[250px] w-[90%] flex flex-col justify-center items-center bg-gray-200 sm:p-6 p-4 rounded-2xl gap-3'>
-              <p className='text-slate-700 sm:text-2xl text-xl font-bold duration-500'>Deletar tarefa?</p>
-              <button
-                className='bg-green-400 w-full p-[6px] rounded-md text-green-900 font-semibold cursor-pointer text-[15px] shadow-[0_0_20px_rgba(0,0,0,0.2)]'
-                onClick={() => deleteTask(taskId)}
-              >
-                Confirmar
-              </button>
-
-              <button
-                className='bg-red-400 w-full p-[6px] rounded-md text-red-900 font-semibold cursor-pointer text-[15px] shadow-[0_0_20px_rgba(0,0,0,0.2)]'
-                onClick={() => setConfirmDelete(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
+          <ModalConfirmDelete deleteTask={deleteTask} taskId={taskId} setConfirmDelete={setConfirmDelete} />
         ) : null
       }
 
       <div className='flex flex-col gap-6 justify-center items-center sm:w-[480px] w-[90%]'>
 
-        <div className='flex gap-2 items-center justify-center'>
-          <i className="fa-solid fa-paperclip text-slate-700 sm:text-3xl text-2xl"></i>
-          <h1 className='text-slate-700 sm:text-3xl text-2xl font-bold'>EasyList</h1>
-        </div>
+        <Logo />
 
         <AddTask onAddTaskClick={onAddTaskClick} />
 
