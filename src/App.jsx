@@ -49,14 +49,6 @@ function App() {
     // Caso não tenha token, retorna
     if (!token) return;
 
-    const validarToken = validarToken();
-
-    // Limpa o token e retorna para login caso o token seja inválido
-    if (!validarToken) {
-      localStorage.removeItem('token');
-      return;
-    }
-
     fetch(`${url}/task`, {
       headers: {
         "Authorization": `Bearer ${token}`
@@ -75,12 +67,6 @@ function App() {
 
     // Caso não tenha token, retorna
     if (!token) return;
-
-    // Limpa o token e retorna para login caso o token seja inválido
-    if (!validarToken) {
-      localStorage.removeItem('token');
-      return;
-    }
 
     fetch(`${url}/cadastro`, {
       headers: {
@@ -113,19 +99,6 @@ function App() {
   // Função para obter o token
   function getToken() {
     return localStorage.getItem('token');
-  }
-
-  // Função para validar token
-  function validarToken() {
-    fetch(`${url}/login`, {
-      headers: {
-        "Authorization": `Bearer ${getToken()}`
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        return data.userExist;
-      })
   }
 
   // Função para adicionar nova tarefa
