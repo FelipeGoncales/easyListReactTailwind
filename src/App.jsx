@@ -8,6 +8,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import limparRota from './components/limparRota';
 import createQuery from './components/createQuery';
+import { v4 } from 'uuid';
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -160,7 +161,8 @@ function App() {
     const newTask = {
       titulo: title,
       descricao: desc,
-      isCompleted: false
+      isCompleted: false,
+      id: v4()
     };
 
     setTasks([...tasks, newTask]);

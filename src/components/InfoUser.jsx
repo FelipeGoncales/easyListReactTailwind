@@ -2,7 +2,7 @@ function InfoUser(props) {
     return (
         <div className='sm:mt-2 mt-0 flex gap-3 justify-between items-center w-full'>
 
-          <div className='mt-2 flex gap-3 justify-center items-center'>
+          <div className='mt-2 flex gap-3 justify-center items-center cursor-pointer'>
             <i className='fa-regular fa-circle-user sm:text-6xl text-5xl text-slate-900'></i>
           
             <div className='flex flex-col justify-center items-start -gap-1'>
