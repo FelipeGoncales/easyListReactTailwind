@@ -29,7 +29,7 @@ function AddTask(props) {
                 onClick={() => {
                     // Retorna caso os inputs estejam vazios
                     if (!title.trim() || !desc.trim()) {
-                        alert("Dados incompletos!");
+                        props.showMessage("Dados incompletos", "error");
                         return;
                     }
 

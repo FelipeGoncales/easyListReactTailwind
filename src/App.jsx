@@ -280,7 +280,7 @@ function App() {
 
         <Logo />
 
-        <AddTask onAddTaskClick={onAddTaskClick} />
+        <AddTask onAddTaskClick={onAddTaskClick} showMessage={showMessage} />
 
         <Tasks tasks={tasks} onDeleteTaskClick={onDeleteTaskClick} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
 
