@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 // URL da API
 const url = "https://easylistapi.onrender.com";
 
-function Login() {
+function Cadastro() {
 
     const navigate = useNavigate();
     
@@ -95,4 +95,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default Cadastro;

@@ -1,7 +1,7 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 import FormLogin from '../components/FormLogin'
 import Logo from '../components/Logo'
-import { useNavigate } from "react-router-dom";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
