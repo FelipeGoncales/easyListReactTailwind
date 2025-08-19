@@ -3,6 +3,7 @@ import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import Logo from './components/Logo'
 import ModalConfirmDelete from './components/ModalConfirmDelete';
+import InfoUser from './components/InfoUser';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 
@@ -74,7 +75,9 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        return setNome(data.nome), setEmail(data.email);
+        const usuario = data.usuario;
+        // Atualiza os estados com os dados do usuário
+        return setNome(usuario.nome), setEmail(usuario.email);
       })
       .catch((err) => console.log(err))
   }, [])
@@ -178,6 +181,12 @@ function App() {
 
   }
 
+  // Limpa o token e redireciona para a página de login
+  function onSairClick() {
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
+
   // Função para navegar para a página de ver detalhes
   function onSeeDetailsClick(id) {
 
@@ -193,7 +202,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gray-200 flex justify-center items-center p-[80px_0]">
+    <div 
+      className="min-h-screen w-full bg-gray-200 flex justify-center items-center sm:p-[80px_0] p-[15px_0]"
+    >
 
       {
         loading ? (
@@ -217,10 +228,7 @@ function App() {
 
         <Tasks tasks={tasks} onDeleteTaskClick={onDeleteTaskClick} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
 
-        <div>
-          <p className='text-slate-900'>{nome}</p>
-          <p className='text-slate-900'>{email}</p>
-        </div>
+        <InfoUser nome={nome} email={email} onSairClick={onSairClick} />
 
       </div>
     </div>

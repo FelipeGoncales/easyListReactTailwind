@@ -79,7 +79,7 @@ function Login() {
         
             <FormLogin email={email} setEmail={setEmail} senha={senha} setSenha={setSenha} onFormSubmit={onFormSubmit} loading={loading} />
 
-            <p className='text-[15px] sm:w-auto w-[90%] text-slate-900 text-center'>ⓒ {currentYear} Todos os direitos reservados</p>
+            <p className='sm:text-[15px] text-[13px] sm:w-auto w-[90%] text-slate-900 text-center'>ⓒ {currentYear} Todos os direitos reservados</p>
 
             {
                 msg && (

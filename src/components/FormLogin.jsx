@@ -36,7 +36,7 @@ function FormLogin(props) {
                     {props.loading ? 'Processando...' : 'Entrar'}
                 </button>
 
-                <p className="text-[15px] text-slate-700">
+                <p className="sm:text-[15px] text-[13px] text-slate-700">
                     Não possui uma conta? <span className="text-slate-900 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/cadastro')}>Cadastre-se</span>
                 </p>
             </div>

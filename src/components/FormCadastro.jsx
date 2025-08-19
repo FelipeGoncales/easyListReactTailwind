@@ -44,7 +44,7 @@ function FormCadastro(props) {
                     {props.loading ? 'Processando...' : 'Criar conta'}
                 </button>
 
-                <p className="text-[15px] text-slate-700">
+                <p className="sm:text-[15px] text-[13px] text-slate-700">
                     Já possui uma conta? <span className="text-slate-900 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/login')}>Entrar</span>
                 </p>
             </div>
