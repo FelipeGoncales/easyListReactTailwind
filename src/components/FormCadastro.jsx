@@ -40,7 +40,7 @@ function FormCadastro(props) {
                     type="submit"
                     className="buttonConfirm"
                 >
-                    Entrar
+                    Criar conta
                 </button>
 
                 <p className="text-[15px] text-slate-700">
