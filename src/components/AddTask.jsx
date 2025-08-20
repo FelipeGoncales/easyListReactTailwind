@@ -3,7 +3,7 @@ import { useState } from "react";
 function AddTask(props) {
 
     // Variável para facilitar alteração no código
-    const titleMaxLength = 20;
+    const titleMaxLength = 30;
 
     // Variáveis de input
     const [title, setTitle] = useState("");

@@ -20,7 +20,7 @@ function Tasks(props) {
                         {task.titulo}
                     </button>
 
-                    <p className={`font-semibold text-[13px] ${!task.isCompleted && new Date() > new Date(task.data) ? "text-red-800" : "text-slate-500"}`}>{formatarData(task.data)}</p>
+                    <p className={`font-semibold text-[13px] ${!task.isCompleted && new Date() > new Date(task.data)? "text-red-800" : "text-slate-500"}`}>{formatarData(task.data)}</p>
                 </div>
 
                 <button

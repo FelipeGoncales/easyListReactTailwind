@@ -194,17 +194,14 @@ function TaskInfo() {
                   {title}
                 </p>
               ) : (
-                <div className="w-[70%] flex justify-between items-center relative">
-
-                  <div className="flex gap-0.5">
-                    <i className="fa-solid fa-pencil absolute left-0 top-1/2 transform -translate-y-1/2 text-slate-600 text-sm"></i>
-                    <input
-                      type="text"
-                      className="sm:text-[18px] text-[17px] pl-[22px] text-slate-700 font-semibold outline-0 w-full"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </div>
+                <div className="flex gap-0.5 w-full relative">
+                  <i className="fa-solid fa-pencil absolute left-0 top-1/2 transform -translate-y-1/2 text-slate-600 text-sm"></i>
+                  <input
+                    type="text"
+                    className="sm:text-[18px] text-[17px] pl-[22px] text-slate-700 font-semibold outline-0 w-full"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
                 </div>
               )
             }
@@ -238,7 +235,7 @@ function TaskInfo() {
                 <p className="w-full">{desc}</p>
 
                 <p 
-                  className={`absolute bottom-2 right-2 font-semibold sm:text-[14px] text-[13px] ${new Date() <= new Date(data) ? "text-slate-600" : "text-red-800"}`}
+                  className={`absolute bottom-2 right-2 font-semibold sm:text-[14px] text-[13px] ${new Date() < new Date(data) ? "text-slate-600" : "text-red-800"}`}
                 >
                   {formatarData(data)}
                 </p>
@@ -255,7 +252,7 @@ function TaskInfo() {
 
                 <input
                   type="date"
-                  className={`absolute bottom-2 right-2 font-semibold text-[13px] ${new Date() <= new Date(data) ? "text-slate-600" : "text-red-800"}`}
+                  className={`absolute bottom-2 right-2 font-semibold text-[13px] ${new Date() < new Date(data) ? "text-slate-600" : "text-red-800"}`}
                   value={data}
                   onChange={(e) => setData(e.target.value)}
                 />

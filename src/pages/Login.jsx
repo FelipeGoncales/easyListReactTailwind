@@ -95,7 +95,10 @@ function Login() {
 
                 // Salva o token e redireciona para home
                 localStorage.setItem('token', data.token);
-                navigate('/');
+                createQuery(navigate, '/', {
+                    text: data.success,
+                    type: "success"
+                });
             })
             .catch((err) => console.log(err))
     }
