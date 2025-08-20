@@ -5,6 +5,7 @@ import App from './App.jsx'
 import TaskInfo from './pages/TaskInfo.jsx'
 import Login from './pages/Login.jsx'
 import Cadastro from './pages/Cadastro.jsx'
+import ValidarCadastro from './pages/ValidarCadastro.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: '/cadastro',
     element: <Cadastro />
+  },
+  {
+    path: '/validar-cadastro',
+    element: <ValidarCadastro />
   }
 ])
 

@@ -197,6 +197,9 @@ function App() {
     setTasks(newTasks);
     setConfirmDelete(false);
 
+    // Exibe mensagem
+    showMessage("Tarefa excluída com sucesso!", "success");
+
     return fetch(`${url}/task`, {
       method: "DELETE",
       headers: {

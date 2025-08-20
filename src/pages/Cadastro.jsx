@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import FormCadastro from '../components/FormCadastro'
 import Logo from '../components/Logo'
 import { useNavigate } from "react-router-dom";
+import createQuery from "../components/createQuery";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -72,9 +73,10 @@ function Cadastro() {
                     return showMessage(data.error, 'error');
                 }
 
-                // Salva o token e redireciona para home
-                localStorage.setItem('token', data.token);
-                navigate('/');
+                // Redireciona para a página de verificar cadastro
+                return createQuery(navigate, '/validar-cadastro', {
+                    email: email
+                })
             })
             .catch((err) => console.log(err))
     }

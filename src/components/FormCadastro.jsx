@@ -21,8 +21,9 @@ function FormCadastro(props) {
 
             <input 
                 className="inputForm"
-                type="text" 
+                type="email" 
                 placeholder="E-mail*" 
+                required
                 value={props.email}
                 onChange={(e) => props.setEmail(e.target.value)}
             />
@@ -31,6 +32,7 @@ function FormCadastro(props) {
                 className="inputForm" 
                 type="password" 
                 placeholder="Senha*" 
+                required
                 value={props.senha}
                 onChange={(e) => props.setSenha(e.target.value)}
             />

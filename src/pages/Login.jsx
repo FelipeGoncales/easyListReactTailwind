@@ -78,7 +78,12 @@ function Login() {
             .then((data) => {
                 setLoading(false);
 
+                // Caso dê erro
                 if (data.error) {
+                    // Redireciona para validar cadastro caso não esteja verificado
+                    if (data.emailNotConfirmed) {
+                        return navigate('/validar-cadastro');
+                    }
                     // Exibir mensagem de erro
                     return showMessage(data.error, 'error');
                 }
