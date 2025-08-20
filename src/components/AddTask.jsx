@@ -56,7 +56,7 @@ function AddTask(props) {
             <input
                 type="date"
                 placeholder="Data"
-                className="bg-slate-300 p-2 outline-0 rounded-md sm:text-[16px] text-[13px]"
+                className="bg-slate-300 p-2 outline-0 rounded-md sm:text-[16px] text-[13px] w-full outline-0"
                 value={data}
                 onChange={(e) => setData(e.target.value)}
             />
