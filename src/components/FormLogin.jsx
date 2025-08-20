@@ -6,7 +6,7 @@ function FormLogin(props) {
 
     return (
         <form
-            className="flex flex-col p-6 rounded-2xl bg-slate-400 items-center justify-center gap-6 w-[90%] max-w-[350px]" 
+            className="form" 
             onSubmit={(e) => props.onFormSubmit(e)}
         >
             <h1 className="subtitle">Faça login</h1>

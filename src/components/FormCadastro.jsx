@@ -6,7 +6,7 @@ function FormCadastro(props) {
 
     return (
         <form
-            className="flex flex-col p-6 rounded-2xl bg-slate-400 items-center justify-center gap-6 w-[90%] max-w-[350px]" 
+            className="form" 
             onSubmit={(e) => props.onFormSubmit(e)}
         >
             <h1 className="subtitle">Crie sua conta</h1>
@@ -46,7 +46,7 @@ function FormCadastro(props) {
                     {props.loading ? 'Processando...' : 'Criar conta'}
                 </button>
 
-                <p className="sm:text-[15px] text-[13px] text-slate-700">
+                <p className="sm:text-[14px] text-[12px] text-slate-700">
                     Já possui uma conta? <span className="text-slate-900 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/login')}>Entrar</span>
                 </p>
             </div>

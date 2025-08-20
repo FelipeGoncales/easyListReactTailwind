@@ -26,10 +26,6 @@ function App() {
   // Loading
   const [loading, setLoading] = useState(true);
 
-  // confirmDelete
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [taskId, setTaskId] = useState(0);
-
   // Tasks
   const [tasks, setTasks] = useState([])
 
@@ -66,7 +62,7 @@ function App() {
   useEffect(() => {
     // Obtém o token
     const token = getToken();
-    
+
     // Retorna caso seja inválido
     if (!token) return;
 
@@ -114,7 +110,7 @@ function App() {
         if (msgType || msgText) {
 
           limparRota(['text', 'type'], navigate, route, searchParams);
-         
+
           return showMessage(msgText, msgType)
         }
 
@@ -136,36 +132,30 @@ function App() {
     fetchBoth();
   }, [searchParams, route, navigate]);
 
-  // Controla o scroll quando o modal estiver aberto
-  useEffect(() => {
-    if (confirmDelete) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    // cleanup pra garantir que o scroll volta
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [confirmDelete]);
-
   // Função para obter o token
   function getToken() {
     return localStorage.getItem('token');
   }
 
   // Função para adicionar nova tarefa
-  function onAddTaskClick(title, desc) {
+  function onAddTaskClick(title, desc, data) {
 
+    // Cria o novo objeto task
     const newTask = {
       titulo: title,
       descricao: desc,
       isCompleted: false,
+      data: data,
+      // ID aleatório provisoriamente
       id: v4()
     };
 
-    setTasks([...tasks, newTask]);
+    // Organiza as tasks por data crescente
+    setTasks((prev) => {
+      const updatedTasks = [...prev, newTask];
+      const sortedTasks = updatedTasks.sort((a,b) => new Date(a.data) - new Date(b.data));
+      return sortedTasks;
+    })
 
     return fetch(`${url}/task`, {
       method: "POST",
@@ -177,39 +167,13 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setTasks((prev) => [...prev.filter(t => t !== newTask), data.newTask]);
+        setTasks((prev) => {
+          // Atualiza a lista e retorna ela organizada por data crescente
+          const updatedTasks = [...prev.filter(t => t !== newTask), data.newTask];
+          const sortedTasks = updatedTasks.sort((a,b) => new Date(a.data) - new Date(b.data));
+          return sortedTasks;
+      });
       })
-      .catch((err) => console.log(err))
-  }
-
-  // Função para abrir o modal
-  function onDeleteTaskClick(taskId) {
-    setTaskId(taskId);
-    setConfirmDelete(true);
-  }
-
-  // Função para deletar uma task
-  function deleteTask(taskId) {
-    // Obtém as novas tasks
-    const newTasks = tasks.filter((task) => task.id != taskId)
-
-    // Atualiza o front
-    setTasks(newTasks);
-    setConfirmDelete(false);
-
-    // Exibe mensagem
-    showMessage("Tarefa excluída com sucesso!", "success");
-
-    return fetch(`${url}/task`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${getToken()}`
-      },
-      body: JSON.stringify({
-        id_task: taskId
-      })
-    })
       .catch((err) => console.log(err))
   }
 
@@ -267,15 +231,9 @@ function App() {
 
       {
         loading ? (
-          <div className='flex items-center justify-center absolute top-0 left-0 bg-gray-200 w-full h-full'>
+          <div className='flex items-center justify-center absolute top-0 left-0 bg-gray-200 w-full h-full z-10'>
             <ClipLoader size={30} margin={3} speedMultiplier={1.1} />
           </div>
-        ) : null
-      }
-
-      {
-        confirmDelete ? (
-          <ModalConfirmDelete deleteTask={deleteTask} taskId={taskId} setConfirmDelete={setConfirmDelete} />
         ) : null
       }
 
@@ -285,7 +243,7 @@ function App() {
 
         <AddTask onAddTaskClick={onAddTaskClick} showMessage={showMessage} />
 
-        <Tasks tasks={tasks} onDeleteTaskClick={onDeleteTaskClick} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
+        <Tasks tasks={tasks} onTaskClick={onTaskClick} onSeeDetailsClick={onSeeDetailsClick} />
 
         <InfoUser nome={nome} email={email} onSairClick={() => onSairClick('success', 'Logout realizado com sucesso!')} />
 
@@ -296,7 +254,7 @@ function App() {
           <div className="fixed left-1/2 transform -translate-x-1/2 bottom-[30px] flex items-center justify-center w-full">
             <div
               className={`flex items-center justify-center p-3 rounded-md gap-3 shadow-md max-w-[350px] msg
-                      ${msg.type === "error" ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"}`}
+    ${msg.type === "error" ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"}`}
             >
               <i className={`fa-solid ${msg.type === "error" ? "fa-xmark" : "fa-check"} text-[15px]`} />
               <p className="text-[14px]/[1.1rem] font-semibold">{msg.text}</p>

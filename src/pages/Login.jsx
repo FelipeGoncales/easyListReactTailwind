@@ -3,6 +3,8 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import FormLogin from '../components/FormLogin'
 import Logo from '../components/Logo'
 import limparRota from "../components/limparRota";
+import AlertMessage from "../components/AlertMessage";
+import createQuery from "../components/createQuery";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -82,7 +84,10 @@ function Login() {
                 if (data.error) {
                     // Redireciona para validar cadastro caso não esteja verificado
                     if (data.emailNotConfirmed) {
-                        return navigate('/validar-cadastro');
+                        return createQuery(navigate, '/validar-cadastro', {
+                            email: email,
+                            enviarCodigo: true
+                        });
                     }
                     // Exibir mensagem de erro
                     return showMessage(data.error, 'error');
@@ -101,19 +106,11 @@ function Login() {
         
             <FormLogin email={email} setEmail={setEmail} senha={senha} setSenha={setSenha} onFormSubmit={onFormSubmit} loading={loading} />
 
-            <p className='sm:text-[15px] text-[13px] sm:w-auto w-[90%] text-slate-900 text-center'>ⓒ {currentYear} Todos os direitos reservados</p>
+            <p className='sm:text-[14px] text-[12px] sm:w-auto w-[90%] text-slate-900 text-center'>ⓒ {currentYear} Todos os direitos reservados</p>
 
             {
                 msg && (
-                    <div className="fixed left-1/2 transform -translate-x-1/2 bottom-[30px] flex items-center justify-center w-full">
-                        <div 
-                        className={`flex items-center justify-center p-3 rounded-md gap-3 shadow-md max-w-[350px] msg
-                            ${msg.type === "error" ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"}`}
-                        >
-                            <i className={`fa-solid ${msg.type === "error" ? "fa-xmark" : "fa-check"} text-[15px]`} />
-                            <p className="text-[14px]/[1.1rem] font-semibold">{msg.text}</p>
-                        </div>
-                    </div>
+                    <AlertMessage msg={msg} />
                 )
             }
         </div>

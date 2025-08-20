@@ -3,6 +3,7 @@ import FormCadastro from '../components/FormCadastro'
 import Logo from '../components/Logo'
 import { useNavigate } from "react-router-dom";
 import createQuery from "../components/createQuery";
+import AlertMessage from "../components/AlertMessage";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -25,6 +26,7 @@ function Cadastro() {
     // Variável para fazendo requisição
     const [loading, setLoading] = useState(false);
 
+    // Effect para limpar timeout de mensagem
     useEffect(() => {
         if (msg) {
             const timer = setTimeout(() => setMsg(null), 4000);
@@ -91,15 +93,7 @@ function Cadastro() {
         
             {
                 msg && (
-                    <div className="fixed left-1/2 transform -translate-x-1/2 bottom-[30px] flex items-center justify-center w-full">
-                        <div 
-                        className={`flex items-center justify-center p-3 rounded-md gap-3 shadow-md max-w-[350px] msg
-                            ${msg.type === "error" ? "bg-red-400 text-red-800" : "bg-green-400 text-green-800"}`}
-                        >
-                            <i className={`fa-solid ${msg.type === "error" ? "fa-xmark" : "fa-check"} text-[15px]`} />
-                            <p className="text-[14px]/[1.1rem] font-semibold">{msg.text}</p>
-                        </div>
-                    </div>
+                    <AlertMessage msg={msg} />
                 )
             }
         </div>

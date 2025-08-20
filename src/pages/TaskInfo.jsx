@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import ModalConfirmDelete from "../components/ModalConfirmDelete";
 import createQuery from "../components/createQuery";
+import formatarData from "../components/formatarData";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -27,6 +28,7 @@ function TaskInfo() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
+  const [data, setData] = useState("");
 
   // Caso os parâmetros estejam vazios, retorna para a página principal
   useEffect(() => {
@@ -57,6 +59,7 @@ function TaskInfo() {
         setTitle(task.titulo);
         setDesc(task.descricao);
         setIsCompleted(task.isCompleted);
+        setData(task.data);
 
         // Tira o loading
         setLoading(false);
@@ -118,7 +121,7 @@ function TaskInfo() {
     })
       .then((res) => {
         if (res.ok) {
-            return res.json()
+          return res.json()
         }
         return null
       })
@@ -138,6 +141,8 @@ function TaskInfo() {
   function onSaveChangesClick() {
     setEditOn(false);
 
+    console.log(data)
+
     return fetch(`${url}/task`, {
       method: "PUT",
       headers: {
@@ -147,7 +152,8 @@ function TaskInfo() {
       body: JSON.stringify({
         id_task: id,
         titulo: title,
-        descricao: desc
+        descricao: desc,
+        data: data
       })
     })
       .catch((err) => console.log(err))
@@ -188,14 +194,17 @@ function TaskInfo() {
                   {title}
                 </p>
               ) : (
-                <div className="w-[70%] relative">
-                  <i className="fa-solid fa-pencil absolute left-0 top-1/2 transform -translate-y-1/2 text-slate-600 text-sm"></i>
-                  <input
-                    type="text"
-                    className="sm:text-[18px] text-[17px] pl-[22px] text-slate-700 font-semibold outline-0 w-full"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
+                <div className="w-[70%] flex justify-between items-center relative">
+
+                  <div className="flex gap-0.5">
+                    <i className="fa-solid fa-pencil absolute left-0 top-1/2 transform -translate-y-1/2 text-slate-600 text-sm"></i>
+                    <input
+                      type="text"
+                      className="sm:text-[18px] text-[17px] pl-[22px] text-slate-700 font-semibold outline-0 w-full"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                  </div>
                 </div>
               )
             }
@@ -225,18 +234,31 @@ function TaskInfo() {
 
           {
             !editOn ? (
-              <p className="p-3 rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] overflow-hidden">
-                {desc}
-              </p>
+              <div className="p-3 pb-10 rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] overflow-hidden relative">
+                <p className="w-full">{desc}</p>
+
+                <p 
+                  className={`absolute bottom-2 right-2 font-semibold sm:text-[14px] text-[13px] ${new Date() <= new Date(data) ? "text-slate-600" : "text-red-800"}`}
+                >
+                  {formatarData(data)}
+                </p>
+              </div>
             ) : (
-              <div className="w-full relative overflow-hidden">
+              <div className="w-full relative overflow-hidden p-3 pb-8 pl-[33px] rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] w-full">
                 <i className="fa-solid fa-pencil absolute left-[10px] top-1/2 transform -translate-y-1/2 text-slate-600 text-sm overflow-hidden"></i>
                 <textarea
                   type="text"
-                  className="p-3 pl-[33px] rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] outline-0 w-full h-20"
+                  className="resize-none outline-0 w-full h-20"
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                 ></textarea>
+
+                <input
+                  type="date"
+                  className={`absolute bottom-2 right-2 font-semibold text-[13px] ${new Date() <= new Date(data) ? "text-slate-600" : "text-red-800"}`}
+                  value={data}
+                  onChange={(e) => setData(e.target.value)}
+                />
               </div>
             )
           }

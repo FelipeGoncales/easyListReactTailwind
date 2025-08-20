@@ -1,26 +1,27 @@
 import { useState } from "react";
+import formatarData from "./formatarData";
 
 function Tasks(props) {
 
+    // Variáveis de controle do dropdown de tarefas pendentes e concluídas
     const [pendentesOn, setPendentesOn] = useState(true);
     const [concluidasOn, setConcluidasOn] = useState(false);
 
+    // Função para adicionar o componente task
     function addTask(props, task) {
         return (
             <div key={task.id} className="flex justify-center items-center gap-2 sm:h-14 h-10">
-                <button
-                    className={`bg-slate-300 rounded-md sm:p-3 p-2 text-slate-900 w-full text-left cursor-pointer h-full sm:text-[16px] text-[14px] ${task.isCompleted ? 'line-through' : ""}`}
-                    onClick={() => props.onTaskClick(task.id)}
-                >
-                    {task.titulo}
-                </button>
+                <div className="flex w-full h-full min-w-0 items-center justify-between bg-slate-300 rounded-md sm:p-3 p-2">
 
-                <button
-                    className="text-xl bg-slate-300 p-5 rounded-md text-slate-900 cursor-pointer h-full items-center justify-center sm:flex hidden"
-                    onClick={() => props.onDeleteTaskClick(task.id)}
-                >
-                    <i className="fa-regular fa-trash-can"></i>
-                </button>
+                    <button
+                        className={`text-slate-900 w-full text-left cursor-pointer h-full sm:text-[16px] text-[14px] truncate ${task.isCompleted && "line-through"}`}
+                        onClick={() => props.onTaskClick(task.id)}
+                    >
+                        {task.titulo}
+                    </button>
+
+                    <p className={`font-semibold text-[13px] ${!task.isCompleted && new Date() > new Date(task.data) ? "text-red-800" : "text-slate-500"}`}>{formatarData(task.data)}</p>
+                </div>
 
                 <button
                     className="text-xl bg-slate-300 sm:p-5 p-4 rounded-md text-slate-900 cursor-pointer h-full flex items-center justify-center"
@@ -46,11 +47,10 @@ function Tasks(props) {
                         pendentesOn ?
                             (
                                 props.tasks.map((task) => {
-                                        if (!task.isCompleted) {
-                                            return addTask(props, task);
-                                        }
+                                    if (!task.isCompleted) {
+                                        return addTask(props, task);
                                     }
-                                )
+                                })
                             ) : null
                     }
 
@@ -69,11 +69,10 @@ function Tasks(props) {
                         concluidasOn ?
                             (
                                 props.tasks.map((task) => {
-                                        if (task.isCompleted) {
-                                            return addTask(props, task);
-                                        }
+                                    if (task.isCompleted) {
+                                        return addTask(props, task);
                                     }
-                                )
+                                })
                             ) : null
                     }
 
