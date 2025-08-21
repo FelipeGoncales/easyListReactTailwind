@@ -84,6 +84,45 @@ function Perfil() {
         setMsg({ text, type });
     }
 
+    // Função de envio do formulário
+    function onFormSaveChangesSubmit(e) {
+        // Evita que o navegador recarregue a página
+        e.preventDefault();
+
+        // Obtém o token
+        const token = getToken();
+
+        const data = {}
+
+        if (!email.trim() || !nome.trim()) {
+            return showMessage("Dados incompletos", "error");
+        }
+
+        data["email"] = email;
+        data["nome"] = nome;
+        
+        // Acessa a rota de cadastro
+        fetch(`${url}/cadastro`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "+token
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                // Retorna mensagem de erro caso houver
+                if (data.error) {
+                    return showMessage(data.error, "error");
+                }
+
+                // Retorna mensagem de sucesso
+                return showMessage(data.success, "success");
+            })
+            .catch((err) => console.log(err));
+    }
+
     // Limpa o token e redireciona para a página de login
     function onSairClick(type, text) {
         // Remove o token do local storage
@@ -153,13 +192,23 @@ function Perfil() {
 
                 <FormPerfil email={email} setEmail={setEmail} nome={nome} setNome={setNome} senha={senha} setSenha={setSenha} confirmSenha={confirmSenha} setConfirmSenha={setConfirmSenha} />
 
-                <button
-                    className="bg-[#ff4652] p-[8px] rounded-xl text-red-800 flex items-center justify-center gap-1 text-[15px] cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.15)]"
-                    onClick={() => setConfirmDelete(true)}
-                >
-                    <i className="fa-solid fa-trash-can"></i>
-                    Excluir conta
-                </button>
+                <div className="flex justify-between items-center w-full">
+                    <div 
+                        className="flex justify-between items-center gap-3 text-[14px] cursor-pointer p-[10px_0] text-slate-900"
+                        onClick={() => navigate('/')}
+                    >
+                        <i className="fa-solid fa-chevron-left text-xl"></i>
+                        <p>Voltar para home</p>
+                    </div>
+
+                    <button
+                        className="bg-[#ff4652] p-[8px] rounded-xl text-red-800 flex items-center justify-center gap-1 text-[14px] cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.15)]"
+                        onClick={() => setConfirmDelete(true)}
+                    >
+                        <i className="fa-solid fa-trash-can"></i>
+                        Excluir conta
+                    </button>
+                </div>
             </div>
 
         </div>
