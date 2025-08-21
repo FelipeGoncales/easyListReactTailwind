@@ -8,6 +8,10 @@
     @apply text-slate-700 sm:text-2xl text-xl font-bold text-center;
 }
 
+.label {
+    @apply text-slate-700 font-semibold sm:text-[16px] text-[15px]
+}
+
 .inputForm {
     @apply outline-0 bg-slate-300 p-2 rounded-sm text-slate-900 w-full sm:text-[15px] text-[13px];
 }

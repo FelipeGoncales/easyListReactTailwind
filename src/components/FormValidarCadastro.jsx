@@ -1,4 +1,5 @@
 function FormValidarCadastro(props) {
+
     return (
         <form 
             onSubmit={(e) => props.onFormSubmit(e)}

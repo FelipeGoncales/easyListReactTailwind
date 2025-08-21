@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import Tasks from './components/Tasks';
 import AddTask from './components/AddTask';
 import Logo from './components/Logo'
-import ModalConfirmDelete from './components/ModalConfirmDelete';
 import InfoUser from './components/InfoUser';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
 import limparRota from './components/limparRota';
 import createQuery from './components/createQuery';
 import { v4 } from 'uuid';
+import TelaLoading from './components/TelaLoading';
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -231,9 +230,7 @@ function App() {
 
       {
         loading ? (
-          <div className='flex items-center justify-center absolute top-0 left-0 bg-gray-200 w-full h-full z-10'>
-            <ClipLoader size={30} margin={3} speedMultiplier={1.1} />
-          </div>
+          <TelaLoading />
         ) : null
       }
 

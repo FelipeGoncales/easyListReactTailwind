@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import ModalConfirmDelete from "../components/ModalConfirmDelete";
 import createQuery from "../components/createQuery";
 import formatarData from "../components/formatarData";
+import TelaLoading from "../components/TelaLoading";
 
 // URL da API
 const url = "https://easylistapi.onrender.com";
@@ -162,14 +162,12 @@ function TaskInfo() {
   return (
     <div className="h-screen w-screen bg-gray-200 flex justify-center items-center">
       {loading ? (
-        <div className="flex items-center justify-center absolute top-0 left-0 bg-gray-200 w-full h-full z-[2]">
-          <ClipLoader size={30} margin={3} speedMultiplier={1.1} />
-        </div>
+        <TelaLoading />
       ) : null}
 
       {
         confirmDelete ? (
-          <ModalConfirmDelete deleteTask={deleteTask} taskId={id} setConfirmDelete={setConfirmDelete} />
+          <ModalConfirmDelete action={deleteTask} id={id} setConfirm={setConfirmDelete} title={"Deletar tarefa?"} />
         ) : null
       }
 

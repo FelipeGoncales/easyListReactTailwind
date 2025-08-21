@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import InputPassword from "./InputPassword";
 
 function FormLogin(props) {
 
+    // Declarando variável de navegação
     const navigate = useNavigate();
+
+    // Variável para controle de mostrar senha
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <form
@@ -20,14 +26,7 @@ function FormLogin(props) {
                 onChange={(e) => props.setEmail(e.target.value)}
             />
 
-            <input
-                className="inputForm" 
-                type="password" 
-                placeholder="Senha*" 
-                required
-                value={props.senha}
-                onChange={(e) => props.setSenha(e.target.value)}
-            />
+            <InputPassword placeholder={"Senha*"} senha={props.senha} setSenha={props.setSenha} showPassword={showPassword} setShowPassword={setShowPassword} inputRequired={true} />
 
             <div className="w-full flex flex-col items-center justify-center gap-3">
                 <button 
