@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import createQuery from "../components/createQuery";
-import Logo from "../components/Logo";
-import FormValidarCadastro from "../components/FormValidarCadastro";
-import AlertMessage from "../components/AlertMessage";
+import createQuery from "../components/functions/createQuery";
+import Logo from "../components/universais/Logo";
+import FormValidarCadastro from "../components/validar-cadastro/FormValidarCadastro";
+import AlertMessage from "../components/universais/AlertMessage";
+import urlAPI from "../url";
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = urlAPI;
 
 function ValidarCadastro() {
 

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import FormLogin from '../components/FormLogin'
-import Logo from '../components/Logo'
-import limparRota from "../components/limparRota";
-import AlertMessage from "../components/AlertMessage";
-import createQuery from "../components/createQuery";
+import FormLogin from '../components/login/FormLogin'
+import Logo from '../components/universais/Logo'
+import limparRota from "../components/functions/limparRota";
+import AlertMessage from "../components/universais/AlertMessage";
+import createQuery from "../components/functions/createQuery";
+import urlAPI from "../url";
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = urlAPI;
 
 function Login() {
     // Declarando hooks

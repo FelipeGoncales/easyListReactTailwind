@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import createQuery from "./createQuery";
+import createQuery from "../functions/createQuery";
 
 function InfoUser(props) {
 

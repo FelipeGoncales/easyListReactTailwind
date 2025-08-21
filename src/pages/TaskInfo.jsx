@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import ModalConfirmDelete from "../components/ModalConfirmDelete";
-import createQuery from "../components/createQuery";
-import formatarData from "../components/formatarData";
-import TelaLoading from "../components/TelaLoading";
+import ModalConfirmDelete from "../components/universais/ModalConfirmDelete";
+import createQuery from "../components/functions/createQuery";
+import formatarData from "../components/functions/formatarData";
+import TelaLoading from "../components/universais/TelaLoading";
+import urlAPI from "../url";
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = urlAPI;
 
 function TaskInfo() {
   // Navigate
@@ -239,7 +240,7 @@ function TaskInfo() {
                 </p>
               </div>
             ) : (
-              <div className="w-full relative overflow-hidden p-3 pb-8 pl-[33px] rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] w-full">
+              <div className="relative overflow-hidden p-3 pb-8 pl-[33px] rounded-sm bg-slate-300 text-slate-900 sm:text-[15px] text-[14px] w-full">
                 <i className="fa-solid fa-pencil absolute left-[10px] top-1/2 transform -translate-y-1/2 text-slate-600 text-sm overflow-hidden"></i>
                 <textarea
                   type="text"

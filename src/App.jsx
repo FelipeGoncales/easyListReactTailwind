@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import Tasks from './components/Tasks';
-import AddTask from './components/AddTask';
-import Logo from './components/Logo'
-import InfoUser from './components/InfoUser';
+import Tasks from './components/home/Tasks';
+import AddTask from './components/home/AddTask';
+import Logo from './components/universais/Logo'
+import InfoUser from './components/universais/InfoUser';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import limparRota from './components/limparRota';
-import createQuery from './components/createQuery';
+import limparRota from './components/functions/limparRota';
+import createQuery from './components/functions/createQuery';
 import { v4 } from 'uuid';
-import TelaLoading from './components/TelaLoading';
+import TelaLoading from './components/universais/TelaLoading';
+import urlAPI from './url';
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = urlAPI;
 
 function App() {
 

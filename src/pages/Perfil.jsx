@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import createQuery from "../components/createQuery";
-import InfoUser from "../components/InfoUser";
-import TelaLoading from "../components/TelaLoading";
-import FormPerfil from "../components/FormPerfil";
+import createQuery from "../components/functions/createQuery";
+import InfoUser from "../components/universais/InfoUser";
+import TelaLoading from "../components/universais/TelaLoading";
+import FormPerfil from "../components/perfil/FormPerfil";
 import { useNavigate } from "react-router-dom";
-import ModalConfirmDelete from "../components/ModalConfirmDelete";
+import ModalConfirmDelete from "../components/universais/ModalConfirmDelete";
+import urlAPI from "../url";
+import AlertMessage from "../components/universais/AlertMessage";
 
 // URL da API
-const url = "https://easylistapi.onrender.com";
+const url = urlAPI;
 
 // Página Perfil
 function Perfil() {
@@ -18,8 +20,13 @@ function Perfil() {
     // Obtém os dados do usuário
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [confirmSenha, setConfirmSenha] = useState('');
+    const [senhaAtual, setSenhaAtual] = useState('');
+    const [senhaNova, setSenhaNova] = useState('');
+    const [senhaNovaConfirm, setSenhaNovaConfirm] = useState('');
+
+    // Variáveis para manter nome e email fixo
+    const [nomeFixo, setNomeFixo] = useState('');
+    const [emailFixo, setEmailFixo] = useState('');
 
     // Variável para controle do modal de deletar conta
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -67,9 +74,14 @@ function Perfil() {
 
                 // Obtém e salva os dados do usuário
                 const usuario = data.usuario;
+
+                // Define os valores fixos
+                setNomeFixo(usuario.nome);
+                setEmailFixo(usuario.email);
+
                 return setNome(usuario.nome), setEmail(usuario.email);
             })
-    })
+    }, [])
 
     // Effect onChange msg
     useEffect(() => {
@@ -100,6 +112,18 @@ function Perfil() {
 
         data["email"] = email;
         data["nome"] = nome;
+
+        if (senhaAtual != "") {
+            data["senhaAtual"] = senhaAtual;
+        }
+
+        if (senhaNova != "") {
+            data["senhaNova"] = senhaNova;
+        }
+        
+        if (senhaNovaConfirm != "") {
+            data["senhaNovaConfirm"] = senhaNovaConfirm;
+        }
         
         // Acessa a rota de cadastro
         fetch(`${url}/cadastro`, {
@@ -116,6 +140,21 @@ function Perfil() {
                 if (data.error) {
                     return showMessage(data.error, "error");
                 }
+
+                if (data.codigoEnviado) {
+                    return createQuery(navigate, '/validar-cadastro', {
+                        email: email
+                    });
+                }
+
+                // Limpa os campos de senha
+                setSenhaAtual("");
+                setSenhaNova("");
+                setSenhaNovaConfirm("");
+
+                // Altera nome e email da div info user
+                setEmailFixo(email);
+                setNomeFixo(nome);
 
                 // Retorna mensagem de sucesso
                 return showMessage(data.success, "success");
@@ -188,9 +227,21 @@ function Perfil() {
             }
 
             <div className="sm:w-[420px] w-[90%] flex flex-col justify-center items-center gap-6">
-                <InfoUser nome={nome} email={email} onSairClick={() => onSairClick('success', 'Logout realizado com sucesso!')} />
+                <InfoUser nome={nomeFixo} email={emailFixo} onSairClick={() => onSairClick('success', 'Logout realizado com sucesso!')} />
 
-                <FormPerfil email={email} setEmail={setEmail} nome={nome} setNome={setNome} senha={senha} setSenha={setSenha} confirmSenha={confirmSenha} setConfirmSenha={setConfirmSenha} />
+                <FormPerfil 
+                    email={email} 
+                    setEmail={setEmail} 
+                    nome={nome} 
+                    setNome={setNome} 
+                    senhaNova={senhaNova} 
+                    setSenhaNova={setSenhaNova} 
+                    confirmSenha={senhaNovaConfirm} 
+                    setConfirmSenha={setSenhaNovaConfirm} 
+                    senhaAtual={senhaAtual}
+                    setSenhaAtual={setSenhaAtual}
+                    onFormSubmit={onFormSaveChangesSubmit}
+                />
 
                 <div className="flex justify-between items-center w-full">
                     <div 
@@ -209,6 +260,12 @@ function Perfil() {
                         Excluir conta
                     </button>
                 </div>
+
+                {
+                    msg && (
+                        <AlertMessage msg={msg} />
+                    )
+                }
             </div>
 
         </div>
